@@ -2,8 +2,10 @@
   "name": "vizz-globe",
   "version": "1.0.0",
   "description": "Vizzuality cecium globe and utilities",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
+    "build": "webpack",
+    "example_basic": "webpack ./examples/basic -o ./examples/basic/dist/bundle.js && http-server ./examples/basic/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,5 +23,15 @@
   "bugs": {
     "url": "https://github.com/Vizzuality/vizz-globe/issues"
   },
-  "homepage": "https://github.com/Vizzuality/vizz-globe#readme"
+  "homepage": "https://github.com/Vizzuality/vizz-globe#readme",
+  "dependencies": {
+    "@tweenjs/tween.js": "^17.2.0",
+    "cesium": "^1.47.0",
+    "copy-webpack-plugin": "^4.5.2",
+    "webpack": "^4.16.0"
+  },
+  "devDependencies": {
+    "http-server": "^0.11.1",
+    "webpack-cli": "^3.0.8"
+  }
 }

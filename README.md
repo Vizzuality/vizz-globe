@@ -1,5 +1,10 @@
 # Vizz globe
 
+Did a bit of boilerplate with an example and setting up webpack. for now you can run these commands.
+
+`yarn build` build a new version
+`yarn example_basic` run the basic example on `localhost:8080`
+
 Initial proposal for api, start an issue if you want to change anything or add anything
 
 ```javascript
