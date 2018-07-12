@@ -1,0 +1,25 @@
+{
+  "name": "vizz-globe",
+  "version": "1.0.0",
+  "description": "Vizzuality cecium globe and utilities",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Vizzuality/vizz-globe.git"
+  },
+  "keywords": [
+    "vizzuality",
+    "globe",
+    "cecium",
+    "three.js"
+  ],
+  "author": "Vizzuality",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Vizzuality/vizz-globe/issues"
+  },
+  "homepage": "https://github.com/Vizzuality/vizz-globe#readme"
+}
