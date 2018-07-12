@@ -1,1 +1,2 @@
-export { default as RenderCesiumGlobe } from './viewer';
+export { default as CesiumViewer } from './viewer';
+export { default as Path } from './meshes/path';

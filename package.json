@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "build": "webpack",
-    "example_basic": "webpack ./examples/basic -o ./examples/basic/dist/bundle.js && http-server ./examples/basic/",
+    "example_basic": "webpack --config webpack.config.js ./examples/basic -o ./examples/basic/dist/bundle.js && http-server ./examples/basic/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
