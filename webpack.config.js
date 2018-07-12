@@ -18,6 +18,7 @@ module.exports = {
   resolve: {
     alias: {
       'vizz-globe': path.resolve(__dirname, './src/index.js'),
+      'core': path.resolve(__dirname, './src/core'),
       'cesium': path.resolve(__dirname, cesiumSource)
     }
   },

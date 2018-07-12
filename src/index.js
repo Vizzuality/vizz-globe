@@ -1,32 +1,44 @@
-import Cesium from 'cesium/Cesium';
 import TWEEN from '@tweenjs/tween.js';
 
+import { RenderCesiumGlobe } from 'core';
+
+const defaultMapProvider = {
+  provider: 'mapbox',
+  token: null
+}
+
 class VizzGlobe {
-  constructor() {
-    this.node = null;
-    this.conf = {};
-    this.viewer = null;
+  constructor(id, options = {}) {
+    this._viewer = null;
+    this._camera = null;
+
+    this.nodeId = id;
+    this._options = options;
+
+    // List of element groups we can toggle on globe
+    this._show = {
+      grid: false
+    }
+
+    // All of mesh groups
+    this.layers = null;
+    this.points = null;
+    this.grid = null;
+    this.path = null;
   }
-  init(conf) {
-    this.node = document.createElement('div');
-    this.node.setAttribute('id', 'vizz-globe');
-    document.body.appendChild(this.node);
-    this.viewer = new Cesium.Viewer('vizz-globe', {
-      skyBox: false,
-      requestRenderMode : true,
-      maximumRenderTimeChange : Infinity,
-      animation: false,
-      baseLayerPicker: false,
-      fullscreenButton: false,
-      geocoder: false,
-      homeButton: false,
-      infoBox: false,
-      sceneModePicker: false,
-      selectionIndicator: false,
-      timeline: false,
-      navigationHelpButton: false
-    });
+
+  // **
+  // Exposed methods
+  // **
+  useGrid(bool) { this._show.grid = bool; }
+
+  init(mapProvider = defaultMapProvider) {
+    this._viewer = RenderCesiumGlobe(
+      this.nodeId,
+      this._options,
+      mapProvider
+    );
   }
 }
 
-export default new VizzGlobe();
+export default VizzGlobe;

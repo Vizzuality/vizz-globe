@@ -1,3 +1,7 @@
 import VizzGlobe from 'vizz-globe';
 
-VizzGlobe.init();
+const globeInstance = new VizzGlobe('vizz-globe');
+
+globeInstance.init();
+
+console.log('instance', globeInstance);
