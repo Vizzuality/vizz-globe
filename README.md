@@ -1,52 +1,171 @@
 # Vizz globe
 
-Did a bit of boilerplate with an example and setting up webpack. for now you can run these commands.
-
-`yarn build` build a new version
-`yarn example_basic` run the basic example on `localhost:8080`
-
-Initial proposal for api, start an issue if you want to change anything or add anything
+### This is how you would implement the globe
 
 ```javascript
-import VizzGlobe, { Layers, Points, Grid, Path } from 'vizz-globe';
+<Globe
+  debug={false}
+  
+  zoomControls={true}
 
-VizzGlobe.init(conf); // Initialize cesium with your prefered cesium configuration
+  spin={false}
 
-// Working with layers
-const myLayer = Layers.add('https://someurl/{x}/{y}/{z}')
-myLayer.opacity(opacity, time)
-myLayer.toggle(bool)
-myLayer.index(int) // change layer order within the group
-myLayer.remove()
+  config = {
+    imageryProvider: PropTypes.shape({
+      provider: PropTypes.oneOf(['default', 'mapbox']).isRequired,
+      accessToken: PropTypes.string,
+      mapId: PropTypes.string
+    }),
+    // Read cesium docs for default configurations...
+  }
 
-// Working with points
-const myPoint = Points.add([lat,lng], data)
-myPoint.move([lat, lng], time)
-myPoint.toggle(bool)
-myPoint.remove()
+  camera={
+    // See Cesium docs
+  }
+ 
+  location={
+    bbox: [], // bbox will be prioritized before latlng
+    disableZoom: false,
+    options {
+      duration: 500,
+      delay: 0
+    }
+  },
 
-// Working with paths
-const pathConf = {
-  color: '#e3e3e3',
-  size: 2,
-  alpha: 0.5
-}
+  layers={[ ... ]}
 
-const myPath = Path.create([[lat,lng], [lat,lng]], pathConf)
-myPath.draw(start, end, time) // start, end = 0,100%
+  geojson={[
+    {
+      id: ''
+      type: 'Polygon',
+      coordinates,
+      properties: {
+        stroke: '',
+        fill: '',
+      }
+    },
+    {
+      id: ''
+      type: 'Polygon',
+      coordinates,
+      properties: {
+        stroke: '',
+        fill: '',
+        animate: true
+      }
+    }
+  ]}
 
-// Globe grid overlay
-const gridConf = {
-  opacity: 50,
-  color:'#e3e3e3',
-  // in km, how far above the globe we should render the grid
-  elevation: 10
-}
+  models={[{ path: 'path to model', centroid: [lat, lng] }]}
 
-Grid.activate(gridConf) // use grid ontop of globe
-Grid.add([lat,lng], data)
-
-// Events
-Grid.on('click|mouseover|etc', (tile) => {})
-Points.on('click|mouseover|etc', (point) => {})
+  markers={[
+    <ReactComponent checked lat="" lng="" onClick={} />,
+    <ReactComponent lat="" lng="" />
+  ]}
+   
+  watch={[
+    { bbox: [0, 0, 0, 0], onChange: (bbox) => { console.log(`bbox is visible? ${bbox.isVisible}`) } },
+  ]}
+  
+  onClick={({ e, globeInstance, elementInstance }) => {}}
+  onMoveStart={({ e, globeInstance, elementInstance }) => {}},
+  onMoveEnd={({ e, globeInstance, elementInstance }) => {}}
+/>
 ```
+
+### Detailed information about properties
+
+#### debug
+
+set to `true` to get some useful logs in the console.
+
+#### zoomControls
+
+Should we show the zoom controls or not, default is `true`
+
+#### spin
+
+if the globe should spin, the spinning will stop when you mouseover the globe.
+
+#### config
+
+overrides the default cesium config with your preferred settings.
+
+#### markers
+
+are simply react components you define yourself. What the markers property is doing in the backend is that it adds a tracker to your component, sticks it to the globe and also shows/hides if it's behind the globe. _Lat & Lng is required for the tracker to work._
+
+#### watch
+
+Watch is a way to know if a `bbox` array is visible on the screen. Useful if you want to show/hide elements based on those conditions. `onChange` gets called if the element goes out or into view. What get returned is: `{ isVisible: true }`
+ 
+`onChange` will get called only if `isVisible` condition changed.
+
+#### layers
+
+pass any layers here and we will render them using the [layer manager](https://github.com/Vizzuality/layer-manager) in the background.
+
+#### geojson
+
+are shapes you want to draw on the globe.
+
+#### location
+
+tells the globe where to go, important here is that the `bbox` is prioritized before the `latlng`. So if both are defined, it will go to the bbox.
+
+#### models
+
+Renders 3d models on the centroid defined. This is work in progress
+
+#### Callbacks
+
+`elementClicked` will be `undefined` if no element was clicked
+
+```
+onClick={({ e, globeInstance, elementClicked }) => {}}
+onMoveStart={({ e, globeInstance, elementClicked }) => {}},
+onMoveEnd={({ e, globeInstance, elementClicked }) => {}}
+```
+
+## Globe controlls
+
+```javascript
+import {
+  GlobeControlls,
+  ZoomControlls,
+  LayerControlls,
+  PerspectiveControlls,
+  FitBoundsControlls
+} from 'components/globe/controlls';
+
+
+<GlobeControlls>
+  <ZoomControlls />
+  <LayerControlls
+    mapId={mapId}
+    onBasemap={basemap => this.onBasemap(basemap)}
+    onContextual={ctx => this.onContextual(ctx)}
+  />
+  <PerspectiveControlls perspective={perspective} setLocation={setLocation} />
+  <FitBoundsControlls setLocation={setLocation} />
+</GlobeControlls>
+
+```
+
+### Detailed information about Globe controll properties
+
+#### LayerControlls
+
+Layer controlls require an mapId (node id) and has two properties
+
+- onBasemap, when user changes basemap this gets called
+- onContextual, when user toggles contextual layer this gets called, its required that the layer has `contextual: true` otherwise it wont show up in the layer controlls
+
+#### PerspectiveControlls
+
+- perspective, 2d|3d
+- setLocation, this is required if you want to focus on a bbox when toggeling perspective
+
+#### FitBoundsControlls
+- setLocation, determents what shape to focus on
+
